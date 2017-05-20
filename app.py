@@ -27,28 +27,33 @@ class User(db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
-#gets us to the form to add users.
-#and get all route
-@app.route('/')
+#gets us to the form to add users. - displays all and handles addOne
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    myUsers = User.query.all()
-    for user in myUsers:
-        print(user)
-    return render_template('add_user.html', myUsers=myUsers)
+    if request.method == 'POST':
+        user = User(request.form['username'], request.form['email']) #creates the user
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('index'))
+    else:
+        myUsers = User.query.all()
+        for user in myUsers:
+            print(user)
+        return render_template('add_user.html', myUsers=myUsers)
 
-#get by id route
-@app.route('/<id>', methods=['GET'])
-def show_user(id):
-    user = User.query.filter_by(id=id).first_or_404()
-    return render_template('showOne.html', user=user)
-
-#post route
-@app.route('/post_user', methods = ['POST'])
-def post_user():
-    user = User(request.form['username'], request.form['email']) #creates the user
-    db.session.add(user)
-    db.session.commit()
-    return redirect(url_for('index'))
+#get and edit by id route
+@app.route('/<id>', methods=['GET', 'POST'])
+def show_edit(id):
+    if request.method == 'POST':
+        formInfo = User(request.form['username'], request.form['email'])
+        user = User.query.filter_by(id=id).first()
+        user.username = formInfo.username
+        user.email = formInfo.email
+        db.session.commit()
+        return redirect(url_for('index'))
+    else:
+        user = User.query.filter_by(id=id).first_or_404()
+        return render_template('showOne.html', user=user)
 
 #delete route
 @app.route('/delete/<id>', methods = ['POST'])
@@ -62,15 +67,6 @@ def deleteOne(id):
 def editPage(id):
     user = User.query.filter_by(id=id).first_or_404()
     return render_template('edit.html', user=user)
-
-@app.route('/<id>', methods=['POST'])
-def editUser (id):
-    formInfo = User(request.form['username'], request.form['email'])
-    user = User.query.filter_by(id=id).first()
-    user.username = formInfo.username
-    user.email = formInfo.email
-    db.session.commit()
-    return redirect(url_for('index'))
 
 
 #Api call to weather Undergaround -- renders json object to screen.
@@ -91,7 +87,6 @@ def apicall():
         print (i, todaysWeather[i])
 
     print(todaysWeather)
-
 
     return app.response_class(r, content_type='application/json')
 
