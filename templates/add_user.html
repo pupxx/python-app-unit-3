@@ -19,10 +19,11 @@
   </form>
 
   <h2>Current Users</h2> {% for user in myUsers %}
-  <li><a href="/{{user.id}}">{{user.username}}{{user.email}}</a></li>
+  <li><a href="/{{user.id}}">{{user.username}}: {{user.email}}</a></li>
   <form class="" action="/delete/{{user.id}}" method="post">
     <input type="submit" name="" value="Delete">
   </form>
+
   {% endfor %}
 
 

@@ -37,7 +37,7 @@ def index():
     return render_template('add_user.html', myUsers=myUsers)
 
 #get by id route
-@app.route('/<id>')
+@app.route('/<id>', methods=['GET'])
 def show_user(id):
     user = User.query.filter_by(id=id).first_or_404()
     return render_template('showOne.html', user=user)
@@ -55,6 +55,20 @@ def post_user():
 def deleteOne(id):
     user = User.query.filter_by(id=id).first_or_404()
     db.session.delete(user)
+    db.session.commit()
+    return redirect(url_for('index'))
+
+@app.route('/edit/<id>', methods=['GET'])
+def editPage(id):
+    user = User.query.filter_by(id=id).first_or_404()
+    return render_template('edit.html', user=user)
+
+@app.route('/<id>', methods=['POST'])
+def editUser (id):
+    formInfo = User(request.form['username'], request.form['email'])
+    user = User.query.filter_by(id=id).first()
+    user.username = formInfo.username
+    user.email = formInfo.email
     db.session.commit()
     return redirect(url_for('index'))
 
@@ -80,7 +94,7 @@ def apicall():
 
 
     return app.response_class(r, content_type='application/json')
-    
+
 
 
 

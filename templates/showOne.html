@@ -1,6 +1,6 @@
 <h4>{{user.username}} - {{user.email}}</h4>
-<form class="" action="/delete/{{user.id}}" method="post">
+<form class="" action="/delete/{{user.id}}" method="put">
   <input type="submit" name="" value="Delete">
 </form>
-
+<a href="/edit/{{user.id}}">edit</a>
 <a href="/">Back to all users</a>
