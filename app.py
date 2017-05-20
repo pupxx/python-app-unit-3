@@ -83,12 +83,7 @@ def apicall():
 
     todaysWeather["temp"] = responseData['current_observation']["temp_f"]
 
-    for i in todaysWeather:
-        print (i, todaysWeather[i])
-
-    print(todaysWeather)
-
-    return app.response_class(r, content_type='application/json')
+    return render_template('apiResults.html', todaysWeather=todaysWeather)
 
 
 
