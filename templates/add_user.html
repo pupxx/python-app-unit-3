@@ -18,7 +18,7 @@
     <input type="submit" name="" value="Submit">
   </form>
 
-  <h2>Current User</h2> {% for user in myUsers %}
+  <h2>Current Users</h2> {% for user in myUsers %}
   <li><a href="/{{user.id}}">{{user.username}}{{user.email}}</a></li>
   <form class="" action="/delete/{{user.id}}" method="post">
     <input type="submit" name="" value="Delete">
