@@ -63,13 +63,14 @@ def deleteOne(id):
     db.session.commit()
     return redirect(url_for('index'))
 
+#edit one
 @app.route('/edit/<id>', methods=['GET'])
 def editPage(id):
     user = User.query.filter_by(id=id).first_or_404()
     return render_template('edit.html', user=user)
 
 
-#Api call to weather Undergaround -- renders json object to screen.
+#Api call to weather Undergaround -- results to screen.
 @app.route('/apicall', methods = ['GET'])
 def apicall():
     r = requests.get('http://api.wunderground.com/api/98df7348c668dee6/conditions/q/CA/Seattle.json')
